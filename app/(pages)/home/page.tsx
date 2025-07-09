@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { dummyInterviews } from '@/constants'
+
 import InterviewCard from '@/components/InterviewCard'
 import { getCurrentUser, getInterviewByUserId, getLatestInterviews } from '@/lib/actions/auth.action'
 
@@ -14,8 +14,9 @@ async function page() {
     await getLatestInterviews({userId:user?.id!})
   ])
 
-  
+  //@ts-ignore
   const hasPastInterviews=userInterviews?.length>0;
+  //@ts-ignore
   const hasUpcomingInterviews=latestInterviews?.length>0;
   
 
