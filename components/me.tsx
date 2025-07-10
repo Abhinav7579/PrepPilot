@@ -9,9 +9,6 @@ const Me = ({username,useremail}:Meprops) => {
          if(action.success){
                 toast.success(action.message);
               }
-
-
-
     }
   return (
      <div className='flex justify-center'>
