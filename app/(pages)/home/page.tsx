@@ -4,7 +4,8 @@ import Link from 'next/link'
 import React from 'react'
 
 import InterviewCard from '@/components/InterviewCard'
-import { getCurrentUser, getInterviewByUserId, getLatestInterviews } from '@/lib/actions/auth.action'
+import { getCurrentUser} from '@/lib/actions/auth.action'
+import { getInterviewByUserId, getLatestInterviews } from '@/lib/actions/general.action'
 
 async function page() {
   const user=await getCurrentUser();
@@ -13,6 +14,7 @@ async function page() {
     await getInterviewByUserId(user?.id!),
     await getLatestInterviews({userId:user?.id!})
   ])
+
 
   //@ts-ignore
   const hasPastInterviews=userInterviews?.length>0;

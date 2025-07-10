@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import {vapi} from '@/lib/vapi.sdk'
+import { interviewer } from '@/constants';
 enum CallStatus {
   INACTIVE = "INACTIVE",
   CONNECTING = "CONNECTING",
@@ -16,7 +17,7 @@ interface SavedMessage{
   content:string;
 }
 
-const Agent = ({userName,userId,type}:AgentProps) => {
+const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
     const router=useRouter();
     const [isSpeaking,setIsSpeaking]=useState(false);
     const[callStatus,setCallStatus]=useState<CallStatus>(CallStatus.INACTIVE)
@@ -67,12 +68,34 @@ const Agent = ({userName,userId,type}:AgentProps) => {
     };
 
     },[])
+ 
+    const handleGenerateFeedback=async(messages:SavedMessage[])=>{
+      console.group('generated feeedback');
+
+      const {success,id}={
+        success:true,
+        id:'feedback-d'
+      }
+      if(success && id){
+        router.push(`/interview/${id}/feedback`);
+      }
+      else{
+        console.log("error");
+        router.push('/home');
+      }
+
+    }
 
     useEffect(()=>{
-
-        if (callStatus === CallStatus.FINISHED) {
-        router.push("/home");
+        if(callStatus === CallStatus.FINISHED){
+          if(type==='generate'){
+            router.push('/home')
+          }
+          else{
+            handleGenerateFeedback(messages);
+          }
         }
+        
         
       
 
@@ -94,6 +117,19 @@ const Agent = ({userName,userId,type}:AgentProps) => {
           },
         }
       );
+    }
+    else{
+      let formattedQuestions='';
+      if(questions){
+        formattedQuestions=questions.map((question)=>
+          `-${question}`).join('\n');
+        
+      }
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formattedQuestions,
+        },
+      });
     }
      
   };
