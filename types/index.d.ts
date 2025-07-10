@@ -47,6 +47,11 @@ interface InterviewCardProps {
   createdAt?: string;
 }
 
+interface Meprops{
+  username:string;
+  useremail:string;
+}
+
 interface AgentProps {
   userName?: string;
   userId?: string;

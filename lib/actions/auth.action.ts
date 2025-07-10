@@ -111,6 +111,19 @@ export async function isAuthenticated() {
   return !!user;
 }
 
+export async function removeUser() {
+  const cookieStore = await cookies();
+
+  // Clear the session cookie
+  cookieStore.set("session", "", {
+    maxAge: 0,
+    path: "/",
+  });
+  return {
+    success: true,
+    message: "Logged out successfully",
+  };
+}
 export async function getInterviewByUserId(userId:string):Promise<Interview[] | null>{
     const interviews=await db.collection('interviews').where('userId','==',userId).orderBy('createdAt','desc').get();
 
