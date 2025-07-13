@@ -41,7 +41,7 @@ async function page() {
         {
          hasPastInterviews?(
           userInterviews?.map((interview)=>(
-            <InterviewCard {...interview} key={interview.id}/>
+            <InterviewCard {...interview} userId={user?.id!} key={interview.id}/>
            ))): ( <p>no interview yet</p> )
         }
 
@@ -54,7 +54,7 @@ async function page() {
        {
          hasUpcomingInterviews?(
           latestInterviews?.map((interview)=>(
-            <InterviewCard {...interview} key={interview.id}/>
+            <InterviewCard {...interview} userId={user?.id!} key={interview.id}/>
            ))): ( <p>there are no new interviews available</p> )
         }
       </div>
