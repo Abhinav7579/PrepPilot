@@ -4,7 +4,7 @@ import { z } from "zod";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
-
+import Loader from "./ui/loader";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,18 +15,23 @@ import { Button } from "@/components/ui/button";
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/client";
 import { signUp,signIn } from "@/lib/actions/auth.action";
+import { _endsWith } from "zod/v4/core";
+import { useState } from "react";
 
 
 const authFormSchema = (type: FormType) => {
   return z.object({
     name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
-    email: z.string().email(),
+    email: z.string().email().refine((email) => email.endsWith("@gmail.com"), {
+        message: "Only @gmail.com emails are allowed",
+      }),
     password: z.string().min(3),
   });
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false); 
 
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,6 +44,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+     setLoading(true);
     try {
       if (type === "sign-up") {
         const { name, email, password } = data;
@@ -89,6 +95,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
     } catch (error) {
       console.log(error);
       toast.error(`There was an error: ${error}`);
+    }finally {
+      setLoading(false); 
     }
   };
 
@@ -135,8 +143,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
               type="password"
             />
 
-            <Button className="btn" type="submit">
-              {isSignIn ? "Sign In" : "Create an Account"}
+             <Button className="btn" type="submit" disabled={loading}>
+              {loading ? <Loader /> : isSignIn ? "Sign In" : "Create an Account"}
             </Button>
           </form>
         </Form>
