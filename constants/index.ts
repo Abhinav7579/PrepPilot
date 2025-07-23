@@ -348,8 +348,7 @@ End the conversation on a polite and positive note.
       },
     ],
   },
-    clientMessages: [], 
-  serverMessages: [],
+  
 };
 
 export const feedbackSchema = z.object({

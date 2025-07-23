@@ -109,9 +109,7 @@ const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
 
     setCallStatus(CallStatus.CONNECTING);
       if (vapi && type === "generate") {
-await vapi.start(
-        undefined,
-        undefined,
+ await vapi.start(
         process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
         {
           variableValues: {
@@ -128,9 +126,7 @@ await vapi.start(
           .join("\n");
       }
 
-      await vapi.start(interviewer,
-        undefined,
-         {
+      await vapi.start(interviewer, {
         variableValues: {
           questions: formattedQuestions,
         },
