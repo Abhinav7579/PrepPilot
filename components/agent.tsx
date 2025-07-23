@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import {vapi} from '@/lib/vapi.sdk'
-import { interviewer } from '@/constants';
+import { interviewer} from '@/constants';
 import { createFeedback } from '@/lib/actions/general.action';
 
 enum CallStatus {
@@ -109,7 +109,9 @@ const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
 
     setCallStatus(CallStatus.CONNECTING);
       if (vapi && type === "generate") {
-      await vapi.start(
+await vapi.start(
+        undefined,
+        undefined,
         process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
         {
           variableValues: {
@@ -118,21 +120,22 @@ const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
           },
         }
       );
-    }
-    else{
-      let formattedQuestions='';
-      if(questions){
-        formattedQuestions=questions.map((question)=>
-          `-${question}`).join('\n');
-        
+    } else {
+      let formattedQuestions = "";
+      if (questions) {
+        formattedQuestions = questions
+          .map((question) => `- ${question}`)
+          .join("\n");
       }
-      await vapi.start(interviewer, {
+
+      await vapi.start(interviewer,
+        undefined,
+         {
         variableValues: {
           questions: formattedQuestions,
         },
       });
     }
-     
   };
 
   const handleDisconnect = () => {
